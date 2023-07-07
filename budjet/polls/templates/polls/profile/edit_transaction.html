@@ -91,8 +91,9 @@
                          {% endif %}
                     </div>
 
-                {% elif a.is_transfer %}
-
+                {% elif a.is_transfer%}
+                 {% for i in transfer_accounts %}
+                    {% if i.account_id == a.transfer_account_id and not i.is_deleted%}
                     <div class="input-group input-group-lg">
                         <span class="input-group-text">Сумма</span>
                         <input type="number" name="amount" id="amount" min="0" required step="0.01" class="form-control" aria-label="Sizing example input" aria-describedby="inputGroup-sizing-lg">
@@ -100,7 +101,7 @@
                     <div class="form-floating">
                           <select class="form-select" name="transfer_account_id" id="floatingSelect" aria-label="Floating label select example" required>
                             {% for i in transfer_accounts %}
-                              {% if i.account_id == a.transfer_account_id %}
+                              {% if i.account_id == a.transfer_account_id%}
                                 <option selected value='{{i.account_id}}'>{{i.account_name}}</option>
                               {% elif i.account_id != account.account_id and not i.is_deleted%}
                                 <option value="{{ i.account_id }}"> {{i.account_name}} </option>
@@ -109,6 +110,8 @@
                           </select>
                           <label for="floatingSelect">Выберете счёт</label>
                     </div>
+                    {% endif %}
+                    {% endfor %}
                     <div class="input-group input-group-lg">
                         <span class="input-group-text">Описание</span>
                         {% if a.description %}

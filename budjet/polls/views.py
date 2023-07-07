@@ -1,3 +1,5 @@
+import json
+
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.forms import UserCreationForm
 from django.shortcuts import render, redirect
@@ -9,6 +11,7 @@ from django.views.generic import FormView, DeleteView, UpdateView
 from .forms import *
 from .models import UserAccounts
 from chartjs import views as chart_views
+import json
 
 # Отображение основной страницы
 def index(request):
@@ -54,7 +57,8 @@ def profile_view(request):
         if each.nameofuser_id == request.user.id and not each.is_deleted:
             acc_quantity += 1
             profile_balance += each.account_current_balance
-    return render(request, 'polls/profile/profile.html', {'user_accounts': user_accounts, 'acc_quantity': acc_quantity, 'profile_balance': profile_balance})
+    return render(request, 'polls/profile/profile.html',
+                  {'user_accounts': user_accounts, 'acc_quantity': acc_quantity, 'profile_balance': profile_balance})
 
 
 @login_required
@@ -88,11 +92,13 @@ def add_transaction(request, account_id):
     # account_transaction = Transaction.objects.all()
     return render(request, 'polls/profile/profile.html')
 
+
 def delete_account(request, account_id):
     account = UserAccounts.objects.get(pk=account_id)
     account.is_deleted = True
     account.save()
     return redirect('profile')
+
 
 @login_required
 def edit_account(request, account_id):
@@ -107,6 +113,7 @@ def edit_account(request, account_id):
     else:
         return render(request, 'profile.html')
 
+
 @login_required
 def history_accounts(request, account_id):
     transactions = Transaction.objects.filter(account_id=account_id)
@@ -115,19 +122,60 @@ def history_accounts(request, account_id):
     print(trans_list)
     account = UserAccounts.objects.get(pk=account_id)
     transfer_accounts = UserAccounts.objects.filter(nameofuser=account.nameofuser)
-    chart_amount=[0,0,0,0]
+    chart_amount = [0, 0, 0, 0]
     for i in trans_list:
         if i.is_expense:
-            chart_amount[0] += i.amount
+            chart_amount[0] -= i.amount
         elif i.is_income:
             chart_amount[1] += i.amount
-        elif i.is_transfer:
-            if i.transfer_account_id == account_id:
+        elif i.is_transfer and i.transfer_account_id == account_id:
                 chart_amount[3] += i.amount
-            else: chart_amount[2] += i.amount
+        elif i.is_transfer and i.account_id.account_id == account_id:
+                chart_amount[2] += i.amount
 
-    return render(request, 'polls/profile/history_accounts.html', {'trans_list': trans_list, 'account': account, 'transfer_accounts':transfer_accounts, 'chart_amount':chart_amount,},)
+    income_amount = []
+    income_category = []
+    for i in trans_list:
+        if i.is_income:
+            income_category.append(str(i.category).title())
+        elif i.is_transfer and i.transfer_account_id == account_id:
+            income_category.append("Переводы")
+    income_category = list(set(income_category))
+    for i in income_category:
+        income_amount.append(0)
+    for i in trans_list:
+        for a in income_category:
+            if i.is_income and str(i.category).title() == a:
+                income_amount[income_category.index(a)] += float(i.amount)
+            elif i.is_transfer and i.transfer_account_id == account_id:
+                income_amount[income_category.index("Переводы")] += float(i.amount)
+    income_category = json.dumps(income_category)
 
+    expense_amount = []
+    expense_category = []
+    for i in trans_list:
+        if i.is_expense:
+            expense_category.append(str(i.category).title())
+        elif i.is_transfer and i.account_id.account_id == account_id:
+            expense_category.append("Переводы")
+    expense_category = list(set(expense_category))
+    for i in expense_category:
+        expense_amount.append(0)
+    for i in trans_list:
+        for a in expense_category:
+            if i.is_expense and str(i.category).title() == a:
+                expense_amount[expense_category.index(a)] -= float(i.amount)
+            elif i.is_transfer and i.account_id.account_id == account_id:
+                expense_amount[expense_category.index("Переводы")] += float(i.amount)
+    expense_category = json.dumps(expense_category)
+
+
+
+    return render(request, 'polls/profile/history_accounts.html',
+                  {'trans_list': trans_list, 'account': account, 'transfer_accounts': transfer_accounts,
+                   'chart_amount': chart_amount, 'income_category': income_category,
+                   'income_amount': income_amount,  'expense_category': expense_category,
+                   'expense_amount': expense_amount, }, )
 
 
 def delete_transaction(request, transaction_id):
@@ -148,8 +196,6 @@ def delete_transaction(request, transaction_id):
     transaction.delete()
 
     return redirect('history_accounts', account_id)
-
-
 
 
 def edit_transaction(request, transaction_id):
@@ -174,12 +220,9 @@ def edit_transaction(request, transaction_id):
             user_account.account_current_balance -= float(transaction.amount)
             transfer_account_new = UserAccounts.objects.get(account_id=transaction.transfer_account_id)
             transfer_account_new.account_current_balance += float(transaction.amount)
-            transaction.trans_acc_name =transfer_account_new.account_name
+            transaction.trans_acc_name = transfer_account_new.account_name
             transfer_account_new.save()
 
         transaction.save()
         user_account.save()
     return redirect('history_accounts', account_id)
-
-
-

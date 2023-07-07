@@ -31,6 +31,5 @@ let pieChart = new Chart(moneyChart, {
   data: moneyData
 });
 
-console.log(moneyData.labels);
 
 

@@ -8,9 +8,13 @@
 {% block content %}
 
 <div>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.4.0/Chart.min.js"></script>
     <canvas id="moneyChart" width="10" height="5"></canvas>
-     <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.4.0/Chart.min.js"></script>
     <script data-chart-amount="{{ chart_amount }}" src="/static/moneyChart.js"></script>
+    <canvas id="incomeChart" width="10" height="5"></canvas>
+    <script data-income-amount="{{ income_amount }}" data-income-category="{{ income_category }}" src="/static/incomeChart.js"></script>
+    <canvas id="expenseChart" width="10" height="5"></canvas>
+    <script data-expense-amount="{{ expense_amount }}" data-expense-category="{{ expense_category }}" src="/static/expenseChart.js"></script>
 </div>
 
 
@@ -56,7 +60,7 @@
                                 {% else %}  —
                                 {% endif %}
                             </td>
-                        {% elif a.is_transfer%}
+                        {% elif a.is_transfer %}
                             <td>Перевод</td>
 
                              {% if a.transfer_account_id == account.account_id %}
@@ -107,6 +111,7 @@
                                 </form>
                              </td>
                             <td>
+
                                 {% if a.transfer_account_id != account.account_id %}
                                     {% include "polls/profile/edit_transaction.html" %}
                                 {% endif %}
