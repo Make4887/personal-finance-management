@@ -8,7 +8,7 @@ expense_amount = JSON.parse(expense_amount);
 console.log(expense_amount);
 console.log(expense_category);
 
-let expenseChart = document.getElementById("ExpenseChart");
+let expenseChart = document.getElementById("expenseChart");
 console.log(expense_amount);
 console.log(expense_category);
 
