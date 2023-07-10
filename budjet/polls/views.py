@@ -133,7 +133,7 @@ def history_accounts(request, account_id):
         if i.is_income:
             income_category.append(str(i.category).title())
         elif i.is_transfer and i.transfer_account_id == account_id:
-            income_category.append("Переводы")
+            income_category.append("Переводы на счет")
     income_category = list(set(income_category))
     for i in income_category:
         income_amount.append(0)
@@ -141,8 +141,8 @@ def history_accounts(request, account_id):
         for a in income_category:
             if i.is_income and str(i.category).title() == a:
                 income_amount[income_category.index(a)] += float(i.amount)
-            elif i.is_transfer and i.transfer_account_id == account_id:
-                income_amount[income_category.index("Переводы")] += float(i.amount)
+        if i.is_transfer and i.transfer_account_id == account_id:
+            income_amount[income_category.index("Переводы на счет")] += float(i.amount)
     income_category = json.dumps(income_category)
 
     expense_amount = []
@@ -151,7 +151,7 @@ def history_accounts(request, account_id):
         if i.is_expense:
             expense_category.append(str(i.category).title())
         elif i.is_transfer and i.account_id.account_id == account_id:
-            expense_category.append("Переводы")
+            expense_category.append("Переводы со счета")
     expense_category = list(set(expense_category))
     for i in expense_category:
         expense_amount.append(0)
@@ -159,21 +159,27 @@ def history_accounts(request, account_id):
         for a in expense_category:
             if i.is_expense and str(i.category).title() == a:
                 expense_amount[expense_category.index(a)] -= float(i.amount)
-            elif i.is_transfer and i.account_id.account_id == account_id:
-                expense_amount[expense_category.index("Переводы")] += float(i.amount)
+        if i.is_transfer and i.account_id.account_id == account_id:
+            expense_amount[expense_category.index("Переводы со счета")] += float(i.amount)
     expense_category = json.dumps(expense_category)
 
     balance_change = []
     changing_date = set()
     trans_list = trans_list.order_by('transaction_date')
+
     if len(trans_list) > 1:
         for i in range(len(trans_list)):
             if trans_list[i].transaction_date.date() not in changing_date:
                 changing_date.add(trans_list[i].transaction_date.date())
                 balance_change.append(trans_list[i].amount)
+                if trans_list[i].is_transfer and trans_list[i].account_id.account_id == account_id:
+                    balance_change[i] = -float(balance_change[i])
                 for j in range(i + 1, len(trans_list)):
                     if trans_list[j].transaction_date.date() == trans_list[i].transaction_date.date():
-                        balance_change[i] += trans_list[j].amount
+                        if trans_list[j].is_transfer and trans_list[j].account_id.account_id == account_id:
+                            balance_change[i] -= trans_list[j].amount
+                        else:
+                            balance_change[i] += trans_list[j].amount
         for i in range(len(balance_change) - 1):
             balance_change[i + 1] += balance_change[i]
         changing_date = sorted(list(changing_date))
