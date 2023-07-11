@@ -11,6 +11,9 @@
         <div class="content mb-5">
             <main class="px-3">
                 <h1>Название счета: {{account.account_name}}</h1>
+                <div class="btn-group" role="group" aria-label="Basic example">
+                  {% include "polls/profile/Charts.html" %}
+                </div>
             </main>
         </div>
     </div>
@@ -109,16 +112,5 @@
     </table>
 </div>
 
-<div>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.4.0/Chart.min.js"></script>
-    <canvas class="mt-5" id="moneyChart" width="25" height="5"></canvas>
-    <script data-chart-amount="{{ chart_amount }}" src="/static/moneyChart.js"></script>
-    <canvas class="mt-5" id="incomeChart" width="25" height="5"></canvas>
-    <script data-income-amount="{{ income_amount }}" data-income-category="{{ income_category }}" src="/static/incomeChart.js"></script>
-    <canvas class="mt-5" id="expenseChart" width="25" height="5"></canvas>
-    <script data-expense-amount="{{ expense_amount }}" data-expense-category="{{ expense_category }}" src="/static/expenseChart.js"></script>
-    <canvas class="mt-5" id="transactionsChart" width="25" height="5"></canvas>
-    <script data-balance-change="{{ balance_change }}" data-changing-date="{{ changing_date }}" src="/static/transactionsChart.js"></script>
-</div>
 
 {% endblock %}

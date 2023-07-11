@@ -31,7 +31,12 @@ let incomeData = {
 
 let pieIncomeChart = new Chart(incomeChart, {
   type: 'pie',
-  data: incomeData
+  data: incomeData,
+  options: {
+    legend: {
+        position: 'bottom'
+        }
+    }
 });
 
 
