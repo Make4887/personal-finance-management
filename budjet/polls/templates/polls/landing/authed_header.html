@@ -1,16 +1,24 @@
+<style>
+    .blue {
+        color: blue
+    }
+</style>
+
 <header class="container">
-  <div class="d-flex flex-wrap align-items-center justify-content-center justify-content-md-between py-3 mb-4 border-bottom">
-    <div class="col-md-3 mb-2 mb-md-0"></div>
+    <div class="d-flex flex-wrap align-items-center justify-content-center justify-content-md-between py-3 mb-4 border-bottom">
+        <span class="blue h2">PFManager</span>
+        <div class="col-md-3 mb-2 mb-md-0"></div>
 
-    <ul class="nav col-12 col-md-auto mb-2 justify-content-center mb-md-0">
-      <li class="nav-item"><a class="nav-link active" aria-current="page" href="/">Главная</a></li>
-      <li class="nav-item"><a class="nav-link" href="/about">Описание</a></li>
-    </ul>
+        <div class="col-md-3 text-end">
+            <button type="button" class="btn btn-outline-primary me-2">
+                <a class="nav-link active" href="/profile">Профиль</a>
+            </button>
 
-    <div class="col-md-3 text-end">
-      <button type="button" class="btn btn-outline-primary me-2"><a class="nav-link active" href="/profile">Профиль</a></button>
-<!--      <button type="button" class="btn btn-primary"><a class="nav-link" onclick="location.href='{% url 'password_change' %}'">Смена пароля</a></button>-->
-      <button type="button" class="btn btn-primary"><a class="nav-link" onclick="location.href='{% url 'logout' %}?next=/profile'">Выход</a></button>
+<!--            <button type="button" class="btn btn-primary"><a class="nav-link" onclick="location.href='{% url 'password_change' %}'">Смена пароля</a></button>-->
+
+            <button type="button" class="btn btn-primary">
+                <a class="nav-link" onclick="location.href='{% url 'logout' %}?next=/profile'">Выход</a>
+            </button>
+        </div>
     </div>
-  </div>
 </header>

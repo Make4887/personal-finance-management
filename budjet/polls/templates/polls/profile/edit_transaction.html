@@ -1,134 +1,160 @@
 <!-- Button trigger modal -->
-    <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#EditTransactionModal{{a.transaction_id}}">
-      Редактировать операцию
-    </button>
+<button type="button" class="btn btn-primary" data-bs-toggle="modal"
+        data-bs-target="#EditTransactionModal{{a.transaction_id}}">Редактировать операцию
+</button>
 
 <!-- Modal -->
+<div class="modal fade" id="EditTransactionModal{{a.transaction_id}}" tabindex="-1"
+     aria-labelledby="EditTransactionModalLabel{{a.transaction_id}}" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h1 class="modal-title fs-5" id="EditTransactionModalLabel{{a.transaction_id}}">Изменение операции</h1>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
 
-<div class="modal fade" id="EditTransactionModal{{a.transaction_id}}" tabindex="-1" aria-labelledby="EditTransactionModalLabel{{a.transaction_id}}" aria-hidden="true">
-  <div class="modal-dialog">
-    <div class="modal-content">
-      <div class="modal-header">
-        <h1 class="modal-title fs-5" id="EditTransactionModalLabel{{a.transaction_id}}">Изменение операции</h1>
-        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-      </div>
+            <form action="{% url 'edit_transaction' transaction_id=a.transaction_id %}" method="POST">
+                {% csrf_token %}
+                <div class="form-error">{{ form.non_field_errors }}</div>
 
-        <form action="{% url 'edit_transaction' transaction_id=a.transaction_id %}" method="POST">
-          {% csrf_token %}
-             <div class="form-error">{{ form.non_field_errors }}</div>
+                <div class="modal-body">
 
-            <div class="modal-body">
+                    {% if a.is_income %}
+                        <div class="input-group input-group-lg">
+                            <span class="input-group-text">Сумма</span>
+                            <input type="number" name="amount" id="amount" min="0" required step="0.01"
+                                   class="form-control" aria-label="Sizing example input"
+                                   aria-describedby="inputGroup-sizing-lg">
+                        </div>
 
-                {% if a.is_income %}
-                    <div class="input-group input-group-lg">
-                        <span class="input-group-text">Сумма</span>
-                        <input type="number" name="amount" id="amount" min="0" required step="0.01" class="form-control" aria-label="Sizing example input" aria-describedby="inputGroup-sizing-lg">
-                    </div>
-                     <div class="input-group input-group-lg">
-                        <span class="input-group-text">Категория</span>
+                        <div class="input-group input-group-lg">
+                            <span class="input-group-text">Категория</span>
 
-                         {% if a.category %}
-                            <input type="text" id="category" name="category" list="category_income" value="{{ a.category }}" class="form-control" aria-label="Sizing example input" aria-describedby="inputGroup-sizing-lg">
-                            <datalist id="category_income">
-                                  <option>Зарплата</option>
-                                  <option>Подработка</option>
-                                  <option>Стипендия</option>
-                                  <option>Пенсия</option>
-                                  <option>Вернули долг</option>
-                            </datalist>
-                         {% else %}
-                            <input type="text" id="category" name="category" list="category_income" value="" class="form-control" aria-label="Sizing example input" aria-describedby="inputGroup-sizing-lg">
-                            <datalist id="category_income">
-                                  <option>Зарплата</option>
-                                  <option>Подработка</option>
-                                  <option>Стипендия</option>
-                                  <option>Пенсия</option>
-                                  <option>Вернули долг</option>
-                            </datalist>
-                         {% endif %}
+                            {% if a.category %}
+                                <input type="text" id="category" name="category" list="category_income" value="{{ a.category }}"
+                                       class="form-control" aria-label="Sizing example input"
+                                       aria-describedby="inputGroup-sizing-lg">
+                                <datalist id="category_income">
+                                    <option>Зарплата</option>
+                                    <option>Подработка</option>
+                                    <option>Стипендия</option>
+                                    <option>Пенсия</option>
+                                    <option>Вернули долг</option>
+                                </datalist>
+                            {% else %}
+                                <input type="text" id="category" name="category" list="category_income" value="" class="form-control" aria-label="Sizing example input" aria-describedby="inputGroup-sizing-lg">
+                                <datalist id="category_income">
+                                    <option>Зарплата</option>
+                                    <option>Подработка</option>
+                                    <option>Стипендия</option>
+                                    <option>Пенсия</option>
+                                    <option>Вернули долг</option>
+                                </datalist>
+                            {% endif %}
 
-                    </div>
-                     <div class="input-group input-group-lg">
-                        <span class="input-group-text">Описание</span>
-                         {% if a.description %}
-                            <input type="text" id="description" name="description" value="{{ a.description }}" class="form-control" aria-label="Sizing example input" aria-describedby="inputGroup-sizing-lg">
-                         {% else %}
-                            <input type="text" id="description" name="description" value="" class="form-control" aria-label="Sizing example input" aria-describedby="inputGroup-sizing-lg">
-                         {% endif %}
-                    </div>
+                        </div>
 
-                {% elif a.is_expense %}
-                    <div class="input-group input-group-lg">
-                        <span class="input-group-text">Сумма</span>
-                        <input type="number" name="amount" id="amount" max="0" required step="0.01" class="form-control" aria-label="Sizing example input" aria-describedby="inputGroup-sizing-lg">
-                    </div>
-                     <div class="input-group input-group-lg">
-                        <span class="input-group-text">Категория</span>
-                         {% if a.category %}
-                            <input type="text" id="category" name="category" list="category_expense" value="{{ a.category }}" class="form-control" aria-label="Sizing example input" aria-describedby="inputGroup-sizing-lg">
-                            <datalist id="category_expense">
-                                <option>Продукты</option>
-                                <option>Одежда</option>
-                                <option>Рестораны</option>
-                                <option>Кино</option>
-                            </datalist>
-                         {% else %}
-                            <input type="text" id="category" name="category" list="category_expense" value="" class="form-control" aria-label="Sizing example input" aria-describedby="inputGroup-sizing-lg">
-                            <datalist id="category_expense">
-                                <option>Продукты</option>
-                                <option>Одежда</option>
-                                <option>Рестораны</option>
-                                <option>Кино</option>
-                            </datalist>
-                         {% endif %}
-                    </div>
-                     <div class="input-group input-group-lg">
-                        <span class="input-group-text">Описание</span>
-                         {% if a.description %}
-                            <input type="text" id="description" name="description" value="{{ a.description }}" class="form-control" aria-label="Sizing example input" aria-describedby="inputGroup-sizing-lg">
-                         {% else %}
-                            <input type="text" id="description" name="description" value="" class="form-control" aria-label="Sizing example input" aria-describedby="inputGroup-sizing-lg">
-                         {% endif %}
-                    </div>
+                        <div class="input-group input-group-lg">
+                            <span class="input-group-text">Описание</span>
+                            {% if a.description %}
+                                <input type="text" id="description" name="description" value="{{ a.description }}"
+                                       class="form-control" aria-label="Sizing example input"
+                                       aria-describedby="inputGroup-sizing-lg">
+                            {% else %}
+                                <input type="text" id="description" name="description" value="" class="form-control"
+                                       aria-label="Sizing example input" aria-describedby="inputGroup-sizing-lg">
+                            {% endif %}
+                        </div>
 
-                {% elif a.is_transfer%}
-                 {% for i in transfer_accounts %}
-                    {% if i.account_id == a.transfer_account_id and not i.is_deleted%}
-                    <div class="input-group input-group-lg">
-                        <span class="input-group-text">Сумма</span>
-                        <input type="number" name="amount" id="amount" min="0" required step="0.01" class="form-control" aria-label="Sizing example input" aria-describedby="inputGroup-sizing-lg">
-                    </div>
-                    <div class="form-floating">
-                          <select class="form-select" name="transfer_account_id" id="floatingSelect" aria-label="Floating label select example" required>
-                            {% for i in transfer_accounts %}
-                              {% if i.account_id == a.transfer_account_id%}
-                                <option selected value='{{i.account_id}}'>{{i.account_name}}</option>
-                              {% elif i.account_id != account.account_id and not i.is_deleted%}
-                                <option value="{{ i.account_id }}"> {{i.account_name}} </option>
-                              {% endif %}
-                            {% endfor %}
-                          </select>
-                          <label for="floatingSelect">Выберете счёт</label>
-                    </div>
+                    {% elif a.is_expense %}
+                        <div class="input-group input-group-lg">
+                            <span class="input-group-text">Сумма</span>
+                            <input type="number" name="amount" id="amount" max="0" required step="0.01"
+                                   class="form-control" aria-label="Sizing example input"
+                                   aria-describedby="inputGroup-sizing-lg">
+                        </div>
+
+                        <div class="input-group input-group-lg">
+                            <span class="input-group-text">Категория</span>
+                            {% if a.category %}
+                                <input type="text" id="category" name="category" list="category_expense" value="{{ a.category }}"
+                                       class="form-control" aria-label="Sizing example input"
+                                       aria-describedby="inputGroup-sizing-lg">
+                                <datalist id="category_expense">
+                                    <option>Продукты</option>
+                                    <option>Одежда</option>
+                                    <option>Рестораны</option>
+                                    <option>Кино</option>
+                                </datalist>
+                            {% else %}
+                                <input type="text" id="category" name="category" list="category_expense" value="" class="form-control"
+                                       aria-label="Sizing example input" aria-describedby="inputGroup-sizing-lg">
+                                <datalist id="category_expense">
+                                    <option>Продукты</option>
+                                    <option>Одежда</option>
+                                    <option>Рестораны</option>
+                                    <option>Кино</option>
+                                </datalist>
+                            {% endif %}
+                        </div>
+                        <div class="input-group input-group-lg">
+                            <span class="input-group-text">Описание</span>
+                            {% if a.description %}
+                                <input type="text" id="description" name="description" value="{{ a.description }}"
+                                       class="form-control" aria-label="Sizing example input"
+                                       aria-describedby="inputGroup-sizing-lg">
+                            {% else %}
+                                <input type="text" id="description" name="description" value=""
+                                       class="form-control" aria-label="Sizing example input"
+                                       aria-describedby="inputGroup-sizing-lg">
+                            {% endif %}
+                        </div>
+
+                    {% elif a.is_transfer %}
+                        {% for i in transfer_accounts %}
+                            {% if i.account_id == a.transfer_account_id and not i.is_deleted%}
+                                <div class="input-group input-group-lg">
+                                    <span class="input-group-text">Сумма</span>
+                                    <input type="number" name="amount" id="amount" min="0" required step="0.01"
+                                           class="form-control" aria-label="Sizing example input"
+                                           aria-describedby="inputGroup-sizing-lg">
+                                </div>
+
+                                <div class="form-floating">
+                                    <select class="form-select" name="transfer_account_id" id="floatingSelect"
+                                            aria-label="Floating label select example" required>
+                                        {% for i in transfer_accounts %}
+                                            {% if i.account_id == a.transfer_account_id%}
+                                                <option selected value='{{i.account_id}}'>{{i.account_name}}</option>
+                                            {% elif i.account_id != account.account_id and not i.is_deleted%}
+                                                <option value="{{ i.account_id }}"> {{i.account_name}} </option>
+                                            {% endif %}
+                                        {% endfor %}
+                                      </select>
+                                      <label for="floatingSelect">Выберете счёт</label>
+                                </div>
+                            {% endif %}
+                        {% endfor %}
+                        <div class="input-group input-group-lg">
+                            <span class="input-group-text">Описание</span>
+                            {% if a.description %}
+                                <input type="text" id="description" name="description" value="{{ a.description }}"
+                                       class="form-control" aria-label="Sizing example input"
+                                       aria-describedby="inputGroup-sizing-lg">
+                            {% else %}
+                                <input type="text" id="description" name="description" value=""
+                                       class="form-control" aria-label="Sizing example input"
+                                       aria-describedby="inputGroup-sizing-lg">
+                            {% endif %}
+                        </div>
                     {% endif %}
-                    {% endfor %}
-                    <div class="input-group input-group-lg">
-                        <span class="input-group-text">Описание</span>
-                        {% if a.description %}
-                            <input type="text" id="description" name="description" value="{{ a.description }}" class="form-control" aria-label="Sizing example input" aria-describedby="inputGroup-sizing-lg">
-                         {% else %}
-                            <input type="text" id="description" name="description" value="" class="form-control" aria-label="Sizing example input" aria-describedby="inputGroup-sizing-lg">
-                         {% endif %}
-                    </div>
+                </div>
 
-                {% endif %}
-
-            </div>
-            <div class="modal-footer">
-                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Отменить</button>
-                <button type="submit" class="btn btn-primary">Сохранить изменения</button>
-            </div>
-        </form>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Отменить</button>
+                    <button type="submit" class="btn btn-primary">Сохранить изменения</button>
+                </div>
+            </form>
+        </div>
     </div>
-  </div>
 </div>

@@ -28,8 +28,10 @@ let moneyData = {
 
 let pieChart = new Chart(moneyChart, {
   type: 'pie',
-  data: moneyData
+  data: moneyData,
+  options: {
+    legend: {
+        position: 'bottom'
+        }
+    }
 });
-
-
-

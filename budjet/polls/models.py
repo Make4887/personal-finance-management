@@ -1,5 +1,3 @@
-from email.policy import default
-
 from django.db import models
 from django.contrib.auth.models import User
 
@@ -14,6 +12,7 @@ class UserAccounts(models.Model):
     account_current_balance = models.FloatField(default=0.0)
     account_new = models.BooleanField(default=True, blank=True, null=True)
     is_deleted = models.BooleanField(default=False)
+
     def __int__(self):
         return self.account_id
 

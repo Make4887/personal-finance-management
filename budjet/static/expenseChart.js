@@ -31,7 +31,12 @@ let expenseData = {
 
 let pieExpenseChart = new Chart(expenseChart, {
   type: 'pie',
-  data: expenseData
+  data: expenseData,
+  options: {
+    legend: {
+        position: 'bottom'
+        }
+    }
 });
 
 

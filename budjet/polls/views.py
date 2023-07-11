@@ -1,17 +1,12 @@
 import json
-
 from django.contrib.auth.decorators import login_required
-from django.contrib.auth.forms import UserCreationForm
 from django.shortcuts import render, redirect
-from django.shortcuts import get_object_or_404
-# from django.template import loader
-from django.urls import reverse_lazy, reverse
-from django.views.generic import FormView, DeleteView, UpdateView
-# from polls.forms import RegisterUserForm
+from django.urls import reverse_lazy
+from django.views.generic import FormView
 from .forms import *
 from .models import UserAccounts
-from chartjs import views as chart_views
-import json
+from django.core.exceptions import ValidationError
+
 
 # Отображение основной страницы
 def index(request):
@@ -35,10 +30,6 @@ def about(request):
     return render(request, "polls/landing/about.html")
 
 
-# def login(request):
-#     return render(request, "polls/landing/login.html")
-
-
 # Отображение профиля со счетами с проверкой входа пользователя
 @login_required
 def profile_view(request):
@@ -57,8 +48,11 @@ def profile_view(request):
         if each.nameofuser_id == request.user.id and not each.is_deleted:
             acc_quantity += 1
             profile_balance += each.account_current_balance
-    return render(request, 'polls/profile/profile.html',
-                  {'user_accounts': user_accounts, 'acc_quantity': acc_quantity, 'profile_balance': profile_balance})
+    return render(request, 'polls/profile/profile.html', {
+        'user_accounts': user_accounts,
+        'acc_quantity': acc_quantity,
+        'profile_balance': profile_balance
+    })
 
 
 @login_required
@@ -129,9 +123,9 @@ def history_accounts(request, account_id):
         elif i.is_income:
             chart_amount[1] += i.amount
         elif i.is_transfer and i.transfer_account_id == account_id:
-                chart_amount[3] += i.amount
+            chart_amount[3] += i.amount
         elif i.is_transfer and i.account_id.account_id == account_id:
-                chart_amount[2] += i.amount
+            chart_amount[2] += i.amount
 
     income_amount = []
     income_category = []
@@ -139,7 +133,7 @@ def history_accounts(request, account_id):
         if i.is_income:
             income_category.append(str(i.category).title())
         elif i.is_transfer and i.transfer_account_id == account_id:
-            income_category.append("Переводы")
+            income_category.append("Переводы на счет")
     income_category = list(set(income_category))
     for i in income_category:
         income_amount.append(0)
@@ -147,8 +141,8 @@ def history_accounts(request, account_id):
         for a in income_category:
             if i.is_income and str(i.category).title() == a:
                 income_amount[income_category.index(a)] += float(i.amount)
-            elif i.is_transfer and i.transfer_account_id == account_id:
-                income_amount[income_category.index("Переводы")] += float(i.amount)
+        if i.is_transfer and i.transfer_account_id == account_id:
+            income_amount[income_category.index("Переводы на счет")] += float(i.amount)
     income_category = json.dumps(income_category)
 
     expense_amount = []
@@ -157,7 +151,7 @@ def history_accounts(request, account_id):
         if i.is_expense:
             expense_category.append(str(i.category).title())
         elif i.is_transfer and i.account_id.account_id == account_id:
-            expense_category.append("Переводы")
+            expense_category.append("Переводы со счета")
     expense_category = list(set(expense_category))
     for i in expense_category:
         expense_amount.append(0)
@@ -165,17 +159,40 @@ def history_accounts(request, account_id):
         for a in expense_category:
             if i.is_expense and str(i.category).title() == a:
                 expense_amount[expense_category.index(a)] -= float(i.amount)
-            elif i.is_transfer and i.account_id.account_id == account_id:
-                expense_amount[expense_category.index("Переводы")] += float(i.amount)
+        if i.is_transfer and i.account_id.account_id == account_id:
+            expense_amount[expense_category.index("Переводы со счета")] += float(i.amount)
     expense_category = json.dumps(expense_category)
 
+    balance_change = []
+    changing_date = set()
+    trans_list = trans_list.order_by('transaction_date')
 
+    if len(trans_list) > 1:
+        for i in range(len(trans_list)):
+            if trans_list[i].transaction_date.date() not in changing_date:
+                changing_date.add(trans_list[i].transaction_date.date())
+                balance_change.append(trans_list[i].amount)
+                if trans_list[i].is_transfer and trans_list[i].account_id.account_id == account_id:
+                    balance_change[i] = -float(balance_change[i])
+                for j in range(i + 1, len(trans_list)):
+                    if trans_list[j].transaction_date.date() == trans_list[i].transaction_date.date():
+                        if trans_list[j].is_transfer and trans_list[j].account_id.account_id == account_id:
+                            balance_change[i] -= trans_list[j].amount
+                        else:
+                            balance_change[i] += trans_list[j].amount
+        for i in range(len(balance_change) - 1):
+            balance_change[i + 1] += balance_change[i]
+        changing_date = sorted(list(changing_date))
+        for i in range(len(changing_date)):
+            changing_date[i] = changing_date[i].strftime('%d/%m/%y')
+        changing_date = json.dumps(changing_date)
 
     return render(request, 'polls/profile/history_accounts.html',
                   {'trans_list': trans_list, 'account': account, 'transfer_accounts': transfer_accounts,
                    'chart_amount': chart_amount, 'income_category': income_category,
                    'income_amount': income_amount,  'expense_category': expense_category,
-                   'expense_amount': expense_amount, }, )
+                   'expense_amount': expense_amount, 'balance_change': balance_change,
+                   'changing_date': changing_date, }, )
 
 
 def delete_transaction(request, transaction_id):
@@ -226,3 +243,14 @@ def edit_transaction(request, transaction_id):
         transaction.save()
         user_account.save()
     return redirect('history_accounts', account_id)
+
+
+@login_required
+def edit_profile(request):
+    user = User.objects.get(username=request.user.username)
+    if request.method == 'POST':
+        user.username = request.POST.get('username')
+        user.save()
+        return redirect('profile')
+    else:
+        return render(request, 'profile.html')

@@ -1,4 +1,3 @@
-
 {% extends "polls/landing/base.html" %}
 
 {% block title %}
@@ -8,120 +7,109 @@
 {% block content %}
 
 <div>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.4.0/Chart.min.js"></script>
-    <canvas id="moneyChart" width="10" height="5"></canvas>
-    <script data-chart-amount="{{ chart_amount }}" src="/static/moneyChart.js"></script>
-    <canvas id="incomeChart" width="10" height="5"></canvas>
-    <script data-income-amount="{{ income_amount }}" data-income-category="{{ income_category }}" src="/static/incomeChart.js"></script>
-    <canvas id="expenseChart" width="10" height="5"></canvas>
-    <script data-expense-amount="{{ expense_amount }}" data-expense-category="{{ expense_category }}" src="/static/expenseChart.js"></script>
-</div>
-
-
-<div>
-    <div class="text-center">
+    <div class="text-center mt-5">
         <div class="content mb-5">
             <main class="px-3">
                 <h1>Название счета: {{account.account_name}}</h1>
+                <div class="btn-group" role="group" aria-label="Basic example">
+                  {% include "polls/profile/Charts.html" %}
+                </div>
             </main>
         </div>
     </div>
-        <table class="table">
+
+    <table class="text-center table">
         <thead>
-    <tr>
-      <th scope="col">Тип операции</th>
-      <th scope="col">Сумма</th>
-      <th scope="col">Категория</th>
-      <th scope="col">Описание</th>
-      <th scope="col">Дата операции</th>
-      <th scope="col">Удалить</th>
-      <th scope="col">Редактировать</th>
-
-    </tr>
+            <tr>
+                <th scope="col">Тип операции</th>
+                <th scope="col">Сумма</th>
+                <th scope="col">Категория</th>
+                <th scope="col">Описание</th>
+                <th scope="col">Дата операции</th>
+                <th scope="col">Удалить</th>
+                <th scope="col">Редактировать</th>
+            </tr>
         </thead>
-            <tbody>
 
-                    {% for a in trans_list %}
-                    <tr>
-                        {% if a.is_income %}
-                            <td>Доход</td>
-                            <td style="color: green">+{{a.amount}}</td>
-                            <td>
-                                {% if a.category %}
+        <tbody>
+            {% for a in trans_list %}
+                <tr>
+                    {% if a.is_income %}
+                        <td>Доход</td>
+                        <td style="color: green">+{{a.amount}}</td>
+                        <td>
+                            {% if a.category %}
                                 {{a.category}}
-                                {% else %}  —
-                                {% endif %}
-                            </td>
-                        {% elif a.is_expense%}
-                            <td>Расход</td>
-                            <td style="color: red">{{a.amount}}</td>
-                            <td>{% if a.category %}
-                                {{a.category}}
-                                {% else %}  —
-                                {% endif %}
-                            </td>
-                        {% elif a.is_transfer %}
-                            <td>Перевод</td>
-
-                             {% if a.transfer_account_id == account.account_id %}
-
-                                        <td style="color: green">+{{a.amount}}</td>
-                                                 {% if not a.account_id.is_deleted %}
-                                                 <td>Перевод со счета:
-                                                    <a href="{% url 'history_accounts' account_id=a.account_id.account_id %}" class="link-danger link-offset-2 link-underline-opacity-0 link-underline-opacity-0-hover">{{a.account_id.account_name}}</a>
-                                                 </td>
-                                                 {% else %}
-                                                 <td>Перевод с удаленного счета: {{a.account_id.account_name}}</td>
-                                                 {% endif %}
-
-
-
-
-
-                            {% else %}
-
-
-                                        <td style="color: red">-{{a.amount}}</td>
-                                        {% for i in transfer_accounts %}
-                                            {% if i.account_id == a.transfer_account_id %}
-                                                {% if not i.is_deleted %}
-                                                <td>Перевод на счет:
-                                                    <a href="{% url 'history_accounts' account_id=i.account_id %}" class="link-success link-offset-2 link-underline-opacity-0 link-underline-opacity-0-hover">{{i.account_name}}</a>
-                                                </td>
-                                                {% else %}
-                                                <td>Перевод на удаленный счет: {{i.account_name}}</td>
-                                                {% endif %}
-                                            {% endif %}
-                                        {% endfor %}
-
-
+                            {% else %}  —
                             {% endif %}
-
-                        {% endif %}
-                            <td>{% if a.description %}
-                                {{a.description}}
-                                {% else %}  —
-                                {% endif %}</td>
-                            <td>{{a.transaction_date}}</td>
-                            <td>
-                                 <form action="{% url 'delete_transaction' transaction_id=a.transaction_id%}" method="post">
-                              {% csrf_token %}
-
-                              <input type="submit" value="Удалить">
-                                </form>
-                             </td>
-                            <td>
-
-                                {% if a.transfer_account_id != account.account_id %}
-                                    {% include "polls/profile/edit_transaction.html" %}
+                        </td>
+                    {% elif a.is_expense%}
+                        <td>Расход</td>
+                        <td style="color: red">{{a.amount}}</td>
+                        <td>
+                            {% if a.category %}
+                                {{a.category}}
+                            {% else %}  —
+                            {% endif %}
+                        </td>
+                    {% elif a.is_transfer %}
+                        <td>Перевод</td>
+                        {% if a.transfer_account_id == account.account_id %}
+                            <td style="color: green">+{{a.amount}}</td>
+                            {% if not a.account_id.is_deleted %}
+                                <td>Перевод со счета:
+                                    <a href="{% url 'history_accounts' account_id=a.account_id.account_id %}"
+                                       class="link-danger link-offset-2 link-underline-opacity-0 link-underline-opacity-0-hover">
+                                        {{a.account_id.account_name}}
+                                    </a>
+                                </td>
+                            {% else %}
+                                <td>Перевод с удаленного счета: {{a.account_id.account_name}}</td>
+                            {% endif %}
+                        {% else %}
+                            <td style="color: red">-{{a.amount}}</td>
+                            {% for i in transfer_accounts %}
+                                {% if i.account_id == a.transfer_account_id %}
+                                    {% if not i.is_deleted %}
+                                        <td>Перевод на счет:
+                                            <a href="{% url 'history_accounts' account_id=i.account_id %}"
+                                               class="link-success link-offset-2 link-underline-opacity-0 link-underline-opacity-0-hover">
+                                                {{i.account_name}}
+                                            </a>
+                                        </td>
+                                    {% else %}
+                                        <td>Перевод на удаленный счет: {{i.account_name}}</td>
+                                    {% endif %}
                                 {% endif %}
-                            </td>
+                            {% endfor %}
+                        {% endif %}
+                    {% endif %}
 
-                    </tr>
-                    {% endfor %}
-             </tbody>
-</table>
-    </div>
+                    <td>
+                        {% if a.description %}
+                            {{a.description}}
+                        {% else %}  —
+                        {% endif %}
+                    </td>
+
+                    <td>{{a.transaction_date}}</td>
+
+                    <td>
+                        <form action="{% url 'delete_transaction' transaction_id=a.transaction_id%}" method="post">
+                            {% csrf_token %}
+                            <input type="submit" value="Удалить">
+                        </form>
+                    </td>
+
+                    <td>
+                        {% if a.transfer_account_id != account.account_id %}
+                            {% include "polls/profile/edit_transaction.html" %}
+                        {% endif %}
+                    </td>
+                </tr>
+            {% endfor %}
+        </tbody>
+    </table>
 </div>
 
 

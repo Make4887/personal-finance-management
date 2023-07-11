@@ -7,9 +7,9 @@
 {% block content %}
 
 <style>
-  .center {
-    text-align: center;
-  }
+    .center {
+        text-align: center;
+    }
 </style>
 
 <div class="row my-5 py-5">
@@ -25,18 +25,14 @@
                         <input type="text" name="username" class="form-control"
                                id="username" placeholder="Username" autocomplete="off" required>
                         <label for="username">Имя пользователя</label>
-                        <div class="invalid-feedback">
-                             Ошибка имени пользователя
-                        </div>
+                        <div class="invalid-feedback">Ошибка имени пользователя</div>
                     </div>
 
                     <div class="form-floating mb-3">
                         <input type="email" name="email" class="form-control"
                                id="exampleInputEmail1" placeholder="examle@example.com" autocomplete="off" required>
                         <label for="exampleInputEmail1">Адрес электронной почты</label>
-                        <div class="invalid-feedback">
-                             Ошибка электронной почты
-                        </div>
+                        <div class="invalid-feedback">Ошибка электронной почты</div>
                     </div>
 
 
@@ -44,18 +40,14 @@
                         <input type="password" name="password1" class="form-control"
                                id="exampleInputPassword1" placeholder="Password" autocomplete="off" required>
                         <label for="exampleInputPassword1">Пароль</label>
-                        <div class="invalid-feedback">
-                             Введите другой пароль
-                        </div>
+                        <div class="invalid-feedback">Введите другой пароль</div>
                     </div>
 
                     <div class="form-floating mb-3">
                         <input type="password" name="password2" class="form-control"
                                id="exampleInputPassword2" placeholder="Password" autocomplete="off" required>
                         <label for="exampleInputPassword2">Повторите пароль</label>
-                        <div class="invalid-feedback">
-                             Пароли не совпадают
-                        </div>
+                        <div class="invalid-feedback">Пароли не совпадают</div>
                     </div>
                     {{ form.errors }}
                     <div class="center">

@@ -9,8 +9,5 @@ urlpatterns = [
     path('admin/', admin.site.urls),
     path('register/', include('polls.urls')),
     path('about/', include('polls.urls')),
-    # path('profile/', include('polls.urls')),
     path('accounts/', include('django.contrib.auth.urls')),
 ]
-
-
