@@ -113,7 +113,6 @@ def history_accounts(request, account_id):
     transactions = Transaction.objects.filter(account_id=account_id)
     transfer_transactions = Transaction.objects.filter(transfer_account_id=account_id)
     trans_list = transactions | transfer_transactions
-    print(trans_list)
     account = UserAccounts.objects.get(pk=account_id)
     transfer_accounts = UserAccounts.objects.filter(nameofuser=account.nameofuser)
     chart_amount = [0, 0, 0, 0]
@@ -163,36 +162,28 @@ def history_accounts(request, account_id):
             expense_amount[expense_category.index("Переводы со счета")] += float(i.amount)
     expense_category = json.dumps(expense_category)
 
-    balance_change = []
-    changing_date = set()
+    daily_balance_change = {account.account_start_date.date().strftime('%d/%m/%y'): account.account_start_balance}
     trans_list = trans_list.order_by('transaction_date')
+    transactions_amount = len(trans_list)
+    for i in range(transactions_amount):
+        if trans_list[i].transaction_date.date().strftime('%d/%m/%y') not in daily_balance_change.keys():
+            daily_balance_change.update({trans_list[i].transaction_date.date().strftime('%d/%m/%y'): 0})
+        if trans_list[i].is_transfer and trans_list[i].account_id.account_id == account_id:
+            daily_balance_change[trans_list[i].transaction_date.date().strftime('%d/%m/%y')] -= trans_list[i].amount
+        else:
+            daily_balance_change[trans_list[i].transaction_date.date().strftime('%d/%m/%y')] += trans_list[i].amount
+    balance_change = list(daily_balance_change.values())
+    for i in range(len(balance_change) - 1):
+        balance_change[i + 1] += balance_change[i]
+    changing_date = json.dumps(list((daily_balance_change.keys())))
 
-    if len(trans_list) > 1:
-        for i in range(len(trans_list)):
-            if trans_list[i].transaction_date.date() not in changing_date:
-                changing_date.add(trans_list[i].transaction_date.date())
-                balance_change.append(trans_list[i].amount)
-                if trans_list[i].is_transfer and trans_list[i].account_id.account_id == account_id:
-                    balance_change[i] = -float(balance_change[i])
-                for j in range(i + 1, len(trans_list)):
-                    if trans_list[j].transaction_date.date() == trans_list[i].transaction_date.date():
-                        if trans_list[j].is_transfer and trans_list[j].account_id.account_id == account_id:
-                            balance_change[i] -= trans_list[j].amount
-                        else:
-                            balance_change[i] += trans_list[j].amount
-        for i in range(len(balance_change) - 1):
-            balance_change[i + 1] += balance_change[i]
-        changing_date = sorted(list(changing_date))
-        for i in range(len(changing_date)):
-            changing_date[i] = changing_date[i].strftime('%d/%m/%y')
-        changing_date = json.dumps(changing_date)
 
     return render(request, 'polls/profile/history_accounts.html',
                   {'trans_list': trans_list, 'account': account, 'transfer_accounts': transfer_accounts,
                    'chart_amount': chart_amount, 'income_category': income_category,
                    'income_amount': income_amount,  'expense_category': expense_category,
                    'expense_amount': expense_amount, 'balance_change': balance_change,
-                   'changing_date': changing_date, }, )
+                   'changing_date': changing_date, 'transactions_amount': transactions_amount, }, )
 
 
 def delete_transaction(request, transaction_id):

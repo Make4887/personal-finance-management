@@ -1,41 +1,46 @@
 <!-- Button trigger modal -->
 <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#charts">
-  Открыть диаграммы
+    Открыть диаграммы
 </button>
 
 <!-- Modal -->
 <div class="modal fade" id="charts" tabindex="-1" aria-labelledby="chartsLabel" aria-hidden="true">
-  <div class="modal-dialog modal-xl">
-    <div class="modal-content">
-      <div class="modal-header">
-        <h1 class="modal-title fs-5" id="exampleModalLabel">Modal title</h1>
-        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-      </div>
-      <div class="modal-body">
-          <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.4.0/Chart.min.js"></script>
-          <div class="container text-center">
-          <div class="row align-items-start">
-            <div class="col">
-              <canvas class="mt-5" id="moneyChart" width="50" height="60"></canvas>
-              <script data-chart-amount="{{ chart_amount }}" src="/static/moneyChart.js"></script>
+    <div class="modal-dialog modal-xl">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h1 class="modal-title fs-5" id="exampleModalLabel">Визуальная информация по счёту</h1>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
-            <div class="col">
-              <canvas class="mt-5" id="incomeChart" width="50" height="60" ></canvas>
-              <script data-income-amount="{{ income_amount }}" data-income-category="{{ income_category }}" src="/static/incomeChart.js"></script>
+            <div class="modal-body">
+                {% if transactions_amount > 0 %}
+                    <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.4.0/Chart.min.js"></script>
+                    <div class="container text-center">
+                        <div class="row align-items-start">
+                            <div class="col">
+                                <canvas class="mt-5" id="moneyChart" width="50" height="60"></canvas>
+                                <script data-chart-amount="{{ chart_amount }}" src="/static/moneyChart.js"></script>
+                            </div>
+                            <div class="col">
+                                <canvas class="mt-5" id="incomeChart" width="50" height="60" ></canvas>
+                                <script data-income-amount="{{ income_amount }}"
+                                        data-income-category="{{ income_category }}"
+                                        src="/static/incomeChart.js"></script>
+                            </div>
+                            <div class="col">
+                                <canvas class="mt-5" id="expenseChart" width="50" height="60"></canvas>
+                                <script data-expense-amount="{{ expense_amount }}"
+                                        data-expense-category="{{ expense_category }}"
+                                        src="/static/expenseChart.js"></script>
+                            </div>
+                        </div>
+                    </div>
+                    <canvas class="mt-5" id="transactionsChart" width="25" height="12"></canvas>
+                    <script data-balance-change="{{ balance_change }}" data-changing-date="{{ changing_date }}"
+                            src="/static/transactionsChart.js"></script>
+                {% else %}
+                    <h1>На счёте нет транзакций</h1>
+                {% endif %}
             </div>
-            <div class="col">
-              <canvas class="mt-5" id="expenseChart" width="50" height="60"></canvas>
-              <script data-expense-amount="{{ expense_amount }}" data-expense-category="{{ expense_category }}" src="/static/expenseChart.js"></script>
-            </div>
-          </div>
         </div>
-        <canvas class="mt-5" id="transactionsChart" width="25" height="12"></canvas>
-        <script data-balance-change="{{ balance_change }}" data-changing-date="{{ changing_date }}" src="/static/transactionsChart.js"></script>
-      </div>
-      <div class="modal-footer">
-        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-        <button type="button" class="btn btn-primary">Save changes</button>
-      </div>
     </div>
-  </div>
 </div>
