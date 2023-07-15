@@ -20,6 +20,9 @@
        text-align: center;
        margin: auto
     }
+    table tr:last-child td {
+      border-bottom: none;
+    }
 </style>
 
 <body>
@@ -27,8 +30,8 @@
         <div class="card p-3 w-75 m-auto mt-2">
             <div class="d-flex align-items-center">
                 <div class="image">
-                    <img src="https://iznanka.news/upload/resize_cache/iblock/8bc/799_594_1/y8w6376pt65jy0pl39pjc5xqb3df94iv.jpg.webp" class="rounded" width="155">
-<!--                    <img src="https://compote.slate.com/images/926e5009-c10a-48fe-b90e-fa0760f82fcd.png?crop=680%2C453%2Cx0%2Cy0&width=1280" class="rounded" width="155">-->
+<!--                    <img src="https://iznanka.news/upload/resize_cache/iblock/8bc/799_594_1/y8w6376pt65jy0pl39pjc5xqb3df94iv.jpg.webp" class="rounded" width="155">-->
+                    <img src="https://compote.slate.com/images/926e5009-c10a-48fe-b90e-fa0760f82fcd.png?crop=680%2C453%2Cx0%2Cy0&width=1280" class="rounded" width="155">
                 </div>
 
                 <div class="ml-3 w-100">
@@ -72,8 +75,10 @@
                                     </a>
                                 </td>
 
-                                <td class="mt-1 badge p-3 bg-primary rounded-pill centre">
-                                    {{each.account_current_balance}}
+                                <td>
+                                    <span style="font-size: 0.9rem" class="d-flex justify-content-center badge bg-primary rounded-pill p-2">
+                                        {{each.account_current_balance}}
+                                    </span>
                                 </td>
 
                                 <td>

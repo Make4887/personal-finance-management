@@ -24,9 +24,9 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 SECRET_KEY = 'django-insecure-xs)i=i#n)!cbki49g-2d^-&qplmmfmfv&svi0z_9i-d#6&n2+('
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+DEBUG = False
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ['*']
 
 EMAIL_HOST = "smtp.yandex.ru"
 EMAIL_PORT = 465

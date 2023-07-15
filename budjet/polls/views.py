@@ -177,11 +177,10 @@ def history_accounts(request, account_id):
         balance_change[i + 1] += balance_change[i]
     changing_date = json.dumps(list((daily_balance_change.keys())))
 
-
     return render(request, 'polls/profile/history_accounts.html',
                   {'trans_list': trans_list, 'account': account, 'transfer_accounts': transfer_accounts,
                    'chart_amount': chart_amount, 'income_category': income_category,
-                   'income_amount': income_amount,  'expense_category': expense_category,
+                   'income_amount': income_amount, 'expense_category': expense_category,
                    'expense_amount': expense_amount, 'balance_change': balance_change,
                    'changing_date': changing_date, 'transactions_amount': transactions_amount, }, )
 
