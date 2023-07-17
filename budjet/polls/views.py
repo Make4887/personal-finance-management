@@ -141,6 +141,9 @@ def income(trans_list, account_id):
                 income_amount[income_category.index(category)] += float(i.amount)
         if i.is_transfer and i.transfer_account_id == account_id:
             income_amount[income_category.index("Переводы на счет")] += float(i.amount)
+    for i in range(len(income_category)):
+        if income_category[i] == 'None':
+            income_category[i] = 'Без категории'
     income_category = json.dumps(income_category)
     return income_amount, income_category
 
@@ -163,6 +166,9 @@ def expense(trans_list, account_id):
                 expense_amount[expense_category.index(category)] -= float(i.amount)
         if i.is_transfer and i.account_id.account_id == account_id:
             expense_amount[expense_category.index("Переводы со счета")] += float(i.amount)
+    for i in range(len(expense_category)):
+        if expense_category[i] == 'None':
+            expense_category[i] = 'Без категории'
     expense_category = json.dumps(expense_category)
     return expense_amount, expense_category
 
@@ -234,8 +240,9 @@ def delete_transaction(request, transaction_id):
     user_account.save()
     transaction.delete()
 
+    if user_account.is_deleted:
+        return redirect('history_accounts', transaction.transfer_account_id)
     return redirect('history_accounts', account_id)
-
 
 def edit_transaction(request, transaction_id):
     """Изменение транзакции"""
