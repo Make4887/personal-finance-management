@@ -16,17 +16,17 @@ Chart.defaults.global.defaultFontFamily = "Lato";
 Chart.defaults.global.defaultFontSize = 18;
 
 let incomeData = {
-    labels: income_category,
-    datasets: [
-        {
-            data: income_amount,
-            backgroundColor: [
-                "#FF6384",
-                "#63FF84",
-                "#611304",
-                "#FBCEB1",
-            ]
-        }]
+  labels: income_category,
+  datasets: [
+  {
+    data: income_amount,
+    backgroundColor: [
+      "#FF6384",
+      "#63FF84",
+      "#611304",
+      "#FBCEB1",
+    ]
+  }]
 };
 
 let pieIncomeChart = new Chart(incomeChart, {
@@ -34,9 +34,9 @@ let pieIncomeChart = new Chart(incomeChart, {
   data: incomeData,
   options: {
     legend: {
-        position: 'bottom'
-        }
+      position: 'bottom'
     }
+  }
 });
 
 

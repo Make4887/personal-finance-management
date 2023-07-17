@@ -6,37 +6,43 @@
 <!-- Modal -->
 <div class="modal fade" id="EditAccountModal{{each.account_id}}" tabindex="-1"
      aria-labelledby="EditAccountModalLabel{{each.account_id}}" aria-hidden="true">
-    <div class="modal-dialog">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h1 class="modal-title fs-5" id="EditAccountModalLabel{{each.account_id}}">Изменение счёта</h1>
-                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+  <div class="modal-dialog">
+    <div class="modal-content">
+
+      <div class="modal-header">
+        <h1 class="modal-title fs-5" id="EditAccountModalLabel{{each.account_id}}">Изменение счёта</h1>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+
+      <form action="{% url 'edit_account' account_id=each.account_id %}" method="post">
+        {% csrf_token %}
+
+        <div class="form-error">{{ form.non_field_errors }}</div>
+
+        <div class="modal-body">
+
+          <div class="input-group input-group-lg">
+            <span class="input-group-text">Название счёта</span>
+            <input type="text" id="account_name" name="account_name" value="{{ each.account_name }}">
+          </div>
+
+          {% if each.account_new %}
+            <div class="input-group input-group-lg">
+              <span class="input-group-text">Начальный баланс</span>
+              <input type="number" id="account_start_balance" name="account_start_balance"
+                     value="{{ each.account_start_balance }}">
             </div>
+          {% endif %}
 
-            <form action="{% url 'edit_account' account_id=each.account_id %}" method="POST">
-                {% csrf_token %}
-                <div class="form-error">{{ form.non_field_errors }}</div>
-
-                <div class="modal-body">
-                    <div class="input-group input-group-lg">
-                        <span class="input-group-text">Название счёта</span>
-                        <input type="text" id="account_name" name="account_name" value="{{ each.account_name }}">
-                    </div>
-
-                    {% if each.account_new %}
-                        <div class="input-group input-group-lg">
-                            <span class="input-group-text">Начальный баланс</span>
-                            <input type="number" id="account_start_balance" name="account_start_balance"
-                                   value="{{ each.account_start_balance }}">
-                        </div>
-                    {% endif %}
-                </div>
-
-                <div class="modal-footer">
-                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Отменить</button>
-                    <button type="submit" class="btn btn-primary">Сохранить изменения</button>
-                </div>
-            </form>
         </div>
+
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Отменить</button>
+          <button type="submit" class="btn btn-primary">Сохранить изменения</button>
+        </div>
+
+      </form>
+
     </div>
+  </div>
 </div>

@@ -1,48 +1,53 @@
 <style>
-    .content {
-        text-align: center;
-        margin: auto
-    }
+  .content {
+    text-align: center;
+    margin: auto
+  }
 </style>
 
 <!-- Button trigger modal -->
 <div class="content">
-    <button type="button" class="p-2 mt-2 btn btn-outline-primary me-2">
-        <a class="nav-link active" data-bs-toggle="modal" data-bs-target="#exampleModal">Добавить счёт</a>
-    </button>
+  <button type="button" class="p-2 mt-2 btn btn-outline-primary me-2">
+    <a class="nav-link active" data-bs-toggle="modal" data-bs-target="#exampleModal">Добавить счёт</a>
+  </button>
 </div>
 
 <!-- Modal -->
 <div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
-    <div class="modal-dialog">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h1 class="modal-title fs-5" id="exampleModalLabel">Добавление счёта</h1>
-                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-            </div>
-            <form action="{% url 'profile' %}" method="post">
-                {% csrf_token %}
-                <div class="form-error">{{ form.non_field_errors }}</div>
+  <div class="modal-dialog">
+    <div class="modal-content">
 
-                <div class="modal-body">
-                    <div class="input-group input-group-lg">
-                        <span class="input-group-text">Название счёта</span>
-                        <input type="text" name="account_name" class="form-control" aria-label="Sizing example input"
-                               aria-describedby="inputGroup-sizing-lg" required>
-                    </div>
+      <div class="modal-header">
+        <h1 class="modal-title fs-5" id="exampleModalLabel">Добавление счёта</h1>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
 
-                    <div class="input-group input-group-lg">
-                        <span class="input-group-text">Начальный баланс</span>
-                        <input type="number"  name="account_start_balance"  class="form-control"
-                               aria-label="Sizing example input" aria-describedby="inputGroup-sizing-lg" required>
-                    </div>
-                </div>
+      <form action="{% url 'profile' %}" method="post">
+        {% csrf_token %}
 
-                <div class="modal-footer">
-                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Отменить</button>
-                    <button type="submit" class="btn btn-primary">Добавить</button>
-                </div>
-            </form>
+        <div class="form-error">{{ form.non_field_errors }}</div>
+
+        <div class="modal-body">
+          <div class="input-group input-group-lg">
+            <span class="input-group-text">Название счёта</span>
+            <input type="text" name="account_name" class="form-control" aria-label="Sizing example input"
+                   aria-describedby="inputGroup-sizing-lg" required>
+          </div>
+
+          <div class="input-group input-group-lg">
+            <span class="input-group-text">Начальный баланс</span>
+            <input type="number"  name="account_start_balance"  class="form-control"
+                   aria-label="Sizing example input" aria-describedby="inputGroup-sizing-lg" required>
+          </div>
         </div>
+
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Отменить</button>
+          <button type="submit" class="btn btn-primary">Добавить</button>
+        </div>
+
+      </form>
+
     </div>
+  </div>
 </div>
