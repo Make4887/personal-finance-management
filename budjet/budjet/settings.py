@@ -1,5 +1,5 @@
 """Настройки проекта"""
-
+import os
 from pathlib import Path
 
 from django.urls import reverse_lazy
@@ -14,7 +14,7 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 SECRET_KEY = 'django-insecure-xs)i=i#n)!cbki49g-2d^-&qplmmfmfv&svi0z_9i-d#6&n2+('
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = False
+DEBUG = True
 
 ALLOWED_HOSTS = ['*']
 
@@ -120,10 +120,7 @@ USE_TZ = True
 
 STATIC_URL = '/static/'
 
-STATICFILES_DIRS = [
-    BASE_DIR / "static",
-    "/static/",
-]
+STATICFILES_DIRS = [os.path.join(BASE_DIR, 'static')]
 
 MEDIA_ROOT = f'{BASE_DIR}/media'
 
