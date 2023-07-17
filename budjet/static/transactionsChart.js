@@ -13,15 +13,15 @@ console.log(balance_change);
 console.log(changing_date);
 
 let transactionsData = {
-    labels: changing_date,
-    datasets: [
-        {
-            label: 'Изменение баланса по дням',
-            data: balance_change,
-            fill: false,
-            borderColor: 'rgb(75, 192, 192)',
-            tension: 0.1
-        }]
+  labels: changing_date,
+  datasets: [
+  {
+    label: 'Изменение баланса по дням',
+    data: balance_change,
+    fill: false,
+    borderColor: 'rgb(75, 192, 192)',
+    tension: 0.1
+  }]
 };
 
 let lineTransactionsChart = new Chart(transactionsChart, {

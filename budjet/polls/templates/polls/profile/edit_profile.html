@@ -1,40 +1,44 @@
 <style>
-    .content {
-        text-align: center;
-        margin: auto
-    }
+  .content {
+    text-align: center;
+    margin: auto
+  }
 </style>
 
 <!-- Modal -->
 <div class="modal fade" id="EditProfileModal{{user.username}}" tabindex="-1"
      aria-labelledby="EditProfileModalLabel{{user.username}}"
      aria-hidden="true">
-    <div class="modal-dialog">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h1 class="modal-title fs-5" id="EditProfileModalLabel{{user.username}}">
-                    Изменение имени пользователя
-                </h1>
-                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-            </div>
+  <div class="modal-dialog">
+    <div class="modal-content">
 
-            <form action="{% url 'edit_profile' %}" method="post">
-                {% csrf_token %}
-                <div class="form-error">{{ form.non_field_errors }}</div>
+      <div class="modal-header">
+        <h1 class="modal-title fs-5" id="EditProfileModalLabel{{user.username}}">
+          Изменение имени пользователя
+        </h1>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
 
-                <div class="modal-body">
-                    <div class="input-group input-group-lg">
-                        <span class="input-group-text">Новое имя пользователя</span>
-                        <input type="text" name='username' class="form-control" aria-label="Sizing example input"
-                               aria-describedby="inputGroup-sizing-lg" required>
-                    </div>
-                </div>
+      <form action="{% url 'edit_profile' %}" method="post">
+        {% csrf_token %}
 
-                <div class="modal-footer">
-                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Отменить</button>
-                    <button type="submit" class="btn btn-primary">Добавить</button>
-                </div>
-            </form>
+        <div class="form-error">{{ form.non_field_errors }}</div>
+
+        <div class="modal-body">
+          <div class="input-group input-group-lg">
+            <span class="input-group-text">Новое имя пользователя</span>
+            <input type="text" name='username' class="form-control" aria-label="Sizing example input"
+                   aria-describedby="inputGroup-sizing-lg" required>
+          </div>
         </div>
+
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Отменить</button>
+          <button type="submit" class="btn btn-primary">Изменить</button>
+        </div>
+
+      </form>
+
     </div>
+  </div>
 </div>

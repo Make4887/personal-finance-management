@@ -16,17 +16,17 @@ Chart.defaults.global.defaultFontFamily = "Lato";
 Chart.defaults.global.defaultFontSize = 18;
 
 let expenseData = {
-    labels: expense_category,
-    datasets: [
-        {
-            data: expense_amount,
-            backgroundColor: [
-                "#FF6384",
-                "#63FF84",
-                "#611304",
-                "#FBCEB1",
-            ]
-        }]
+  labels: expense_category,
+  datasets: [
+  {
+    data: expense_amount,
+    backgroundColor: [
+      "#FF6384",
+      "#63FF84",
+      "#611304",
+      "#FBCEB1",
+    ]
+  }]
 };
 
 let pieExpenseChart = new Chart(expenseChart, {
@@ -34,9 +34,9 @@ let pieExpenseChart = new Chart(expenseChart, {
   data: expenseData,
   options: {
     legend: {
-        position: 'bottom'
-        }
+      position: 'bottom'
     }
+  }
 });
 
 

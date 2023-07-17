@@ -7,96 +7,111 @@
 {% block content %}
 
 <style>
-   .blue {
-       color = blue;
-   }
-   b {
-       text-decoration: none;
-   }
-   b:hover {
-       text-decoration: underline;
-   }
-   .del {
-       text-align: center;
-       margin: auto
-    }
-    table tr:last-child td {
-      border-bottom: none;
-    }
+  .blue {
+    color = blue;
+  }
+  b {
+    text-decoration: none;
+  }
+  b:hover {
+    text-decoration: underline;
+  }
+  .del {
+    text-align: center;
+    margin: auto
+  }
+  table tr:last-child td {
+    border-bottom: none;
+  }
+  .balance-font {
+    font-size: 0.9rem
+  }
 </style>
 
 <body>
-    <div class="container mt-5 d-flex justify-content-center w-50 m-auto">
-        <div class="card p-3 w-75 m-auto mt-2">
-            <div class="d-flex align-items-center">
-                <div class="image">
-<!--                    <img src="https://iznanka.news/upload/resize_cache/iblock/8bc/799_594_1/y8w6376pt65jy0pl39pjc5xqb3df94iv.jpg.webp" class="rounded" width="155">-->
-                    <img src="https://compote.slate.com/images/926e5009-c10a-48fe-b90e-fa0760f82fcd.png?crop=680%2C453%2Cx0%2Cy0&width=1280" class="rounded" width="155">
-                </div>
 
-                <div class="ml-3 w-100">
-                    <b class="nav-link active nav blue" data-bs-toggle="modal" data-bs-target="#EditProfileModal{{user.username}}">
-                        <h4 class="col-11 text-center mb-0 mt-0">{{ user.username }}</h4>
-                    </b>
-                    {% include "polls/profile/edit_profile.html" %}
-                    <span class="p-2 mt-2 bg-primary d-flex justify-content-between rounded text-white">
-                        Количество счетов:
-                        <span class="text right">{{ acc_quantity }}</span>
-                    </span>
-                    <span class="p-2 mt-2 bg-primary d-flex justify-content-between rounded text-white">
-                        Общий баланс:
-                        <span class="text right">{{ profile_balance }}</span>
-                    </span>
-                    {% include "polls/profile/create_account.html" %}
-                </div>
-            </div>
+  <div class="container mt-5 d-flex justify-content-center w-50 m-auto">
+    <div class="card p-3 w-75 m-auto mt-2">
+      <div class="d-flex align-items-center">
+
+        <div class="image">
+<!--          <img src="https://iznanka.news/upload/resize_cache/iblock/8bc/799_594_1/y8w6376pt65jy0pl39pjc5xqb3df94iv.jpg.webp" class="rounded" width="155" height="105 alt="profile_pic"">-->
+          <img src="https://compote.slate.com/images/926e5009-c10a-48fe-b90e-fa0760f82fcd.png?crop=680%2C453%2Cx0%2Cy0&width=1280"
+               class="rounded" width="155" height="105" alt="profile_pic">
         </div>
-    </div>
-    <div class="container mt-5 d-flex justify-content-center w-700 m-auto">
-        <div class="card w-75 m-auto">
-            <table class="text-center table mt-5">
-                <thead>
-                    <tr>
-                        <th class="h5 blue" scope="col">Название</th>
-                        <th class="h5 blue" scope="col">Баланс</th>
-                        <th class="h5 blue" scope="col">Удалить</th>
-                        <th class="h5 blue" scope="col">Редактировать</th>
-                        <th class="h5 blue" scope="col">Операции</th>
-                    </tr>
-                </thead>
 
-                <tbody>
-                    {% for each in user_accounts %}
-                        {% if each.nameofuser_id == user.id and not each.is_deleted %}
-                            <tr>
-                                <td>
-                                    <a href="{% url 'history_accounts' account_id=each.account_id %}">
-                                        {{each.account_name}}
-                                    </a>
-                                </td>
-
-                                <td>
-                                    <span style="font-size: 0.9rem" class="d-flex justify-content-center badge bg-primary rounded-pill p-2">
-                                        {{each.account_current_balance}}
-                                    </span>
-                                </td>
-
-                                <td>
-                                    <form action="{% url 'delete_account' account_id=each.account_id %}" method="post">
-                                        {% csrf_token %}
-                                         <input class="del p-1 btn btn-outline-primary nav-link active" type="submit" value="Удалить">
-                                    </form>
-                                </td>
-
-                                <td>{% include "polls/profile/edit_account.html" %}</td>
-                                <td>{% include "polls/profile/create_transaction.html" %}</td>
-                            </tr>
-                        {% endif %}
-                    {% endfor %}
-                </tbody>
-            </table>
+        <div class="ml-3 w-100">
+            <b class="nav-link active nav blue" data-bs-toggle="modal"
+               data-bs-target="#EditProfileModal{{user.username}}">
+                <h4 class="col-11 text-center mb-0 mt-0">{{ user.username }}</h4>
+            </b>
+            {% include "polls/profile/edit_profile.html" %}
+            <span class="p-2 mt-2 bg-primary d-flex justify-content-between rounded text-white">
+                Количество счетов:
+                <span class="text right">{{ acc_quantity }}</span>
+            </span>
+            <span class="p-2 mt-2 bg-primary d-flex justify-content-between rounded text-white">
+                Общий баланс:
+                <span class="text right">{{ profile_balance }}</span>
+            </span>
+            {% include "polls/profile/create_account.html" %}
         </div>
+
+      </div>
     </div>
+  </div>
+
+  <div class="container mt-5 d-flex justify-content-center w-700 m-auto">
+    <div class="card w-75 m-auto">
+      <table class="text-center table mt-5">
+
+        <thead>
+          <tr>
+            <th class="h5 blue" scope="col">Название</th>
+            <th class="h5 blue" scope="col">Баланс</th>
+            <th class="h5 blue" scope="col">Удалить</th>
+            <th class="h5 blue" scope="col">Редактировать</th>
+            <th class="h5 blue" scope="col">Операции</th>
+          </tr>
+        </thead>
+
+        <tbody>
+          {% for each in user_accounts %}
+            {% if each.nameofuser_id == user.id and not each.is_deleted %}
+              <tr>
+
+                <td>
+                  <a href="{% url 'history_accounts' account_id=each.account_id %}">
+                    {{each.account_name}}
+                  </a>
+                </td>
+
+                <td>
+                  <span class="balance-font d-flex justify-content-center badge bg-primary rounded-pill p-2">
+                    {{each.account_current_balance}}
+                  </span>
+                </td>
+
+                <td>
+                  <form action="{% url 'delete_account' account_id=each.account_id %}" method="post">
+                    {% csrf_token %}
+                    <input class="del p-1 btn btn-outline-primary nav-link active" type="submit" value="Удалить">
+                  </form>
+                </td>
+
+                <td>{% include "polls/profile/edit_account.html" %}</td>
+
+                <td>{% include "polls/profile/create_transaction.html" %}</td>
+
+              </tr>
+            {% endif %}
+          {% endfor %}
+        </tbody>
+
+      </table>
+    </div>
+  </div>
+
 </body>
 
 {% endblock %}

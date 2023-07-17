@@ -8,22 +8,22 @@ Chart.defaults.global.defaultFontFamily = "Lato";
 Chart.defaults.global.defaultFontSize = 18;
 
 let moneyData = {
-    labels: [
-        "Расход",
-        "Доход",
-        "Перевод со счета",
-        "Перевод на счет",
-    ],
-    datasets: [
-        {
-            data: chart_amount,
-            backgroundColor: [
-                "#FF6384",
-                "#63FF84",
-                "#611304",
-                "#FBCEB1",
-            ]
-        }]
+  labels: [
+    "Расход",
+    "Доход",
+    "Перевод со счета",
+    "Перевод на счет",
+  ],
+  datasets: [
+  {
+    data: chart_amount,
+    backgroundColor: [
+      "#FF6384",
+      "#63FF84",
+      "#611304",
+      "#FBCEB1",
+    ]
+  }]
 };
 
 let pieChart = new Chart(moneyChart, {
@@ -31,7 +31,7 @@ let pieChart = new Chart(moneyChart, {
   data: moneyData,
   options: {
     legend: {
-        position: 'bottom'
-        }
+      position: 'bottom'
     }
+  }
 });
