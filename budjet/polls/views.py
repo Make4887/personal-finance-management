@@ -236,13 +236,12 @@ def delete_transaction(request, transaction_id):
         transfer_account.account_current_balance -= transaction.amount
         user_account.account_current_balance += transaction.amount
         transfer_account.save()
-
     user_account.save()
     transaction.delete()
-
     if user_account.is_deleted:
         return redirect('history_accounts', transaction.transfer_account_id)
     return redirect('history_accounts', account_id)
+
 
 def edit_transaction(request, transaction_id):
     """Изменение транзакции"""
@@ -273,7 +272,6 @@ def edit_transaction(request, transaction_id):
             transfer_account_new.account_current_balance += float(transaction.amount)
             transaction.trans_acc_name = transfer_account_new.account_name
             transfer_account_new.save()
-
         transaction.save()
         user_account.save()
     return redirect('history_accounts', account_id)
