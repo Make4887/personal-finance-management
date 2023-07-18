@@ -133,7 +133,7 @@ def income(trans_list, account_id):
         elif i.is_transfer and i.transfer_account_id == account_id:
             income_category.append("Переводы на счет")
     income_category = list(set(income_category))
-    for i in income_category:
+    for _ in income_category:
         income_amount.append(0)
     for i in trans_list:
         for category in income_category:
@@ -141,8 +141,8 @@ def income(trans_list, account_id):
                 income_amount[income_category.index(category)] += float(i.amount)
         if i.is_transfer and i.transfer_account_id == account_id:
             income_amount[income_category.index("Переводы на счет")] += float(i.amount)
-    for i in range(len(income_category)):
-        if income_category[i] == 'None':
+    for i, j in enumerate(income_category):
+        if j in ('None', ''):
             income_category[i] = 'Без категории'
     income_category = json.dumps(income_category)
     return income_amount, income_category
@@ -158,7 +158,7 @@ def expense(trans_list, account_id):
         elif i.is_transfer and i.account_id.account_id == account_id:
             expense_category.append("Переводы со счета")
     expense_category = list(set(expense_category))
-    for i in expense_category:
+    for _ in expense_category:
         expense_amount.append(0)
     for i in trans_list:
         for category in expense_category:
@@ -166,8 +166,8 @@ def expense(trans_list, account_id):
                 expense_amount[expense_category.index(category)] -= float(i.amount)
         if i.is_transfer and i.account_id.account_id == account_id:
             expense_amount[expense_category.index("Переводы со счета")] += float(i.amount)
-    for i in range(len(expense_category)):
-        if expense_category[i] == 'None':
+    for i, j in enumerate(expense_category):
+        if j in ('None', ''):
             expense_category[i] = 'Без категории'
     expense_category = json.dumps(expense_category)
     return expense_amount, expense_category
@@ -282,7 +282,9 @@ def edit_profile(request):
     """Изменение профиля"""
     user = get_object_or_404(User, username=request.user.username)
     if request.method == 'POST':
-        user.username = request.POST.get('username')
-        user.save()
+        new_username = request.POST.get('username')
+        if new_username[0] != ' ':
+            user.username = new_username
+            user.save()
         return redirect('profile')
     return render(request, 'profile.html')

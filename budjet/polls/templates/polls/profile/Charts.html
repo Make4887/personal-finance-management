@@ -22,13 +22,13 @@
 
               <div class="col">
                 <h3>Распределение по видам транзакций</h3>
-                <canvas class="mt-5" id="moneyChart" width="50" height="60"></canvas>
+                <canvas class="mt-5" id="moneyChart" width="30%" height="40%"></canvas>
                 <script data-chart-amount="{{ chart_amount }}" src="/static/moneyChart.js"></script>
               </div>
 
               <div class="col">
                 <h3>Доходы счета по категориям</h3>
-                <canvas class="mt-5" id="incomeChart" width="50" height="60" ></canvas>
+                <canvas class="mt-5" id="incomeChart" width="30%" height="40%" ></canvas>
                 <script data-income-amount="{{ income_amount }}"
                         data-income-category="{{ income_category }}"
                         src="/static/incomeChart.js"></script>
@@ -36,7 +36,7 @@
 
               <div class="col">
                 <h3>Расходы счета по категориям</h3>
-                <canvas class="mt-5" id="expenseChart" width="50" height="60"></canvas>
+                <canvas class="mt-5" id="expenseChart" width="30%" height="40%"></canvas>
                 <script data-expense-amount="{{ expense_amount }}"
                         data-expense-category="{{ expense_category }}"
                         src="/static/expenseChart.js"></script>
@@ -47,7 +47,7 @@
 
           <div class="mt-5">
             <h3>Изменение баланса</h3>
-            <canvas id="transactionsChart" width="25" height="12"></canvas>
+            <canvas id="transactionsChart" width="100%" height="50%"></canvas>
             <script data-balance-change="{{ balance_change }}" data-changing-date="{{ changing_date }}"
                     src="/static/transactionsChart.js"></script>
           </div>

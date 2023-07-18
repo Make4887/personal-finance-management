@@ -16,6 +16,10 @@
   .red {
     color: red
   }
+  .del {
+    text-align: center;
+    margin: auto
+  }
 </style>
 
 <div>
@@ -54,11 +58,11 @@
 
               {% if a.is_income %}
 
-                <td>Доход</td>
+                <td class="py-2">Доход</td>
 
-                <td class="green">+{{a.amount}}</td>
+                <td class="py-2 green">+{{a.amount}}</td>
 
-                <td>
+                <td class="py-2">
                   {% if a.category %}
                     {{a.category}}
                   {% else %}
@@ -68,11 +72,11 @@
 
               {% elif a.is_expense%}
 
-                <td>Расход</td>
+                <td class="py-2">Расход</td>
 
-                <td class="red">{{a.amount}}</td>
+                <td class="py-2 red">{{a.amount}}</td>
 
-                <td>
+                <td class="py-2">
                   {% if a.category %}
                     {{a.category}}
                   {% else %}
@@ -81,32 +85,32 @@
                 </td>
 
               {% elif a.is_transfer %}
-                <td>Перевод</td>
+                <td class="py-2">Перевод</td>
                 {% if a.transfer_account_id == account.account_id %}
-                  <td class="green">+{{a.amount}}</td>
+                  <td class="py-2 green">+{{a.amount}}</td>
                   {% if not a.account_id.is_deleted %}
-                    <td>Перевод со счета:
+                    <td class="py-2">Перевод со счета:
                       <a href="{% url 'history_accounts' account_id=a.account_id.account_id %}"
                          class="link-danger link-offset-2 link-underline-opacity-0 link-underline-opacity-0-hover">
                         {{a.account_id.account_name}}
                       </a>
                     </td>
                   {% else %}
-                    <td>Перевод с удаленного счета: {{a.account_id.account_name}}</td>
+                    <td class="py-2">Перевод с удаленного счета: {{a.account_id.account_name}}</td>
                   {% endif %}
                 {% else %}
-                  <td class="red">-{{a.amount}}</td>
+                  <td class="py-2 red">-{{a.amount}}</td>
                   {% for i in transfer_accounts %}
                     {% if i.account_id == a.transfer_account_id %}
                       {% if not i.is_deleted %}
-                        <td>Перевод на счет:
+                        <td class="py-2">Перевод на счет:
                           <a href="{% url 'history_accounts' account_id=i.account_id %}"
                              class="link-success link-offset-2 link-underline-opacity-0 link-underline-opacity-0-hover">
                             {{i.account_name}}
                           </a>
                         </td>
                       {% else %}
-                        <td>Перевод на удаленный счет: {{i.account_name}}</td>
+                        <td class="py-2">Перевод на удаленный счет: {{i.account_name}}</td>
                       {% endif %}
                     {% endif %}
                   {% endfor %}
@@ -114,7 +118,7 @@
 
               {% endif %}
 
-              <td>
+              <td class="py-2">
                 {% if a.description %}
                   {{a.description}}
                 {% else %}
@@ -122,16 +126,16 @@
                 {% endif %}
               </td>
 
-              <td>{{a.transaction_date}}</td>
+              <td class="py-2">{{a.transaction_date}}</td>
 
-              <td>
+              <td class="py-2">
                 <form action="{% url 'delete_transaction' transaction_id=a.transaction_id%}" method="post">
                   {% csrf_token %}
-                  <input type="submit" value="Удалить">
+                  <input class="del p-1 btn btn-outline-secondary nav-link active" type="submit" value="Удалить">
                 </form>
               </td>
 
-              <td>
+              <td class="py-2">
                 {% if a.transfer_account_id != account.account_id %}
                   {% include "polls/profile/edit_transaction.html" %}
                 {% endif %}
