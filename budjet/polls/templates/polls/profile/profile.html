@@ -6,28 +6,6 @@
 
 {% block content %}
 
-<style>
-  .blue {
-    color = blue;
-  }
-  b {
-    text-decoration: none;
-  }
-  b:hover {
-    text-decoration: underline;
-  }
-  .del {
-    text-align: center;
-    margin: auto
-  }
-  table tr:last-child td {
-    border-bottom: none;
-  }
-  .balance-font {
-    font-size: 0.9rem
-  }
-</style>
-
 <body>
 
   <div class="container mt-5 d-flex justify-content-center w-50 m-auto">
@@ -95,7 +73,7 @@
                 <td>
                   <form action="{% url 'delete_account' account_id=each.account_id %}" method="post">
                     {% csrf_token %}
-                    <input class="del p-1 btn btn-outline-secondary nav-link active" type="submit" value="Удалить">
+                    <input class="center p-1 btn btn-outline-secondary nav-link active" type="submit" value="Удалить">
                   </form>
                 </td>
 
